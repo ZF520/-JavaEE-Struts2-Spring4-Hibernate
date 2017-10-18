@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" errorPage="" %>
+<%@ page contentType="text/html;charset=utf-8" language="java" errorPage="" %>
 <html>
 	<head>
 		<title>欢迎</title>
