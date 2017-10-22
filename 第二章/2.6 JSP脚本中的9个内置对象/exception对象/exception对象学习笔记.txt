@@ -1,0 +1,13 @@
+exception对象
+知识点：
+	一：exception对象是Throwable的实例，代表JSP脚本中产生的错误和异常，是JSP页面异常机制的一部分。
+
+	二：在JSP脚本中无须处理异常，即使该异常是checked异常。事实上，JSP脚本包含的所有可能出现的异常都可以交给错误处理页面处理。
+
+	三：exception对象仅在异常处理页面中才有效。
+
+	四：_jspx_page_content对异常的处理也非常简单：如果该页面的page指令指定了errorPage属性，则将请求forward到errorPage属性指定的页面，否则使用系统页面来输出异常信息。
+
+	五：在JSP的异常处理机制中，一个异常处理页面可以处理多个JSP页面脚本部分异常。异常处理页面通过page指令的errorPage属性确定。
+
+	六：应将异常处理页面中page指令的isErrorPage属性设置为true。只有当isErrorPage属性设置为true时才可访问exception内置对象。
