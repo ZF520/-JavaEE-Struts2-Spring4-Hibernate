@@ -1,0 +1,9 @@
+config对象
+知识点：
+	一：config对象代表当前JSP配置信息，但JSP页面通常无须配置，因此也就不存在配置信息，所以JSP页面比较少用该对象。但在Servlet中则用处相对较大，因此Servlet需要在web.xml文件中进行配置，可以指定配置参数。
+
+	二：config对象是ServletConfig的实例，该接口用于获取配置参数的方法是getInitParameter(String paramName)。
+
+	三：配置JSP也是在web.xml文件中进行的，JSP被当成Servlet配置，为Servlet配置参数使用init-param元素，该元素可以接受param-name和param-value两个子元素，分别指定参数名和参数值。
+
+	四：如果希望JSP页面可以获取web.xml配置文件中的配置信息，则必须通过为该JSP配置的路径来访问该页面，因为只有这样访问JSP页面才会让配置参数起作用。
