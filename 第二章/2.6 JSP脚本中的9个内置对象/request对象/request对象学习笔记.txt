@@ -1,0 +1,53 @@
+request对象
+知识点：
+	一：request对象是JSP中重要的对象，每个request对象封装着一次用户请求，并且所有的请求参数都被封装在request对象中，因此
+	request对象是获取请求参数的重要途径。
+		request可代表本次请求范围，所以还可用于操作request范围的属性。
+
+	二：获取请求头/请求参数
+		JSP和Servlet取得请求参数的途径就是request。request是HttpServletRequest接口的实例，它提供了如下几个方法来获取请求参数。
+		（1）String getParameter(String paramName)：获取paramName请求参数的值。
+		（2）Map getParameterMap()：获取所有请求参数名和参数值所组成的Map对象。
+		（3）Enumeration getParameterNames()：获取所有请求参数名所组成的Enumeration对象。
+		（4）String[] getParameterValues(String name)：paramName请求参数的值，当该请求参数有多个值时，该方法将返回多个值所组成的数组。
+
+		HttpServletRequest提供了如下方法来访问请求头。
+		（1）String getHeader(String name)：根据指定请求头的值。
+		（2）java.util.Enumeration<String> getHeaderNames()：获取所有请求头的名称。
+		（3）java.util.Enumeration<String> getHeaders(String name)：获取指定请求头的多个值。
+		（4）int getInitHeader(String name)：获取指定请求头的值，并将该值转为整数值。
+
+	三：让客户端发送请求参数通常分两种情况。
+		GET方式的请求：直接在浏览器地址栏输入访问地址所发送的请求或提交表单发送请求时，该表单对应的form元素没有设置method属性，或设置method属性为get，这几种请求都是GET方式的请求。GET方式的请求会将请求参数的名和值转换成字符串，并附加在原URL之后，因此可以在地址栏中看到请求参数名和值。且GET请求传送的数据量较小，一般不能大于2KB。
+
+		POST方式的请求：这种方式通常使用提交表单（由formHTML元素表示）的方式来发送，且需要设置form元素的method属性为post。POST方式传送的数据量较大，通常认为POST请求参数的大小不受限制，但往往取决于服务器的限制，POST请求传输的数据量总比GET传输的数据量大。而且POST方式发送的请求参数以及对应的值放在HTMLHEADER中传输，用户不能在地址栏里看到请求参数值，安全性相对较高。
+
+		通常应该采用POST方式发送请求。
+
+	四：并不是每个表单域都会生成请求参数，而是有name属性的表单域才生成请求参数。关于表单域和请求参数的关系遵循如下4点。
+		（1）每个有name属性的表单域对应一个请求参数。
+		（2）如果有多个表单域有相同的name属性，则多个表单域只生成一个请求参数，只是该参数有多个值。
+		（3）表单域的name属性指定请求参数名，value指定请求参数值。
+		（4）如果某个表单域设置了disabled="disabled"属性，则该表单域不再生成请求参数。
+
+	五：如果POST请求的请求参数里包含非西欧字符，则必须在获取请求参数之前先调用setCharacterEncoding()方法设置编码的字符集。
+
+	六：如果需要传递的参数是普通字符串，而且仅需要传递少量参数，可以选择使用GET方式发送请求参数，GET方式发送的请求参数被附和到地址栏的URL之后，地址栏的URL将变成如下形式：
+		url?param1=value&param2=value2&...paramN=valueN
+		URL和参数之间以“？”分隔，而多个参数之间以“&”分隔。
+
+	七：操作request范围的属性
+		HttpServletRequest还包含如下两个方法，用于设置和获取request范围的属性。
+		（1）setAttribute(String attName, Object attValue)：将attValue设置成request范围的属性。
+		（2）Object getAttribute(String attName)：获取request范围的属性。
+
+		当forward用户请求时，请求的参数和请求属性都不会丢失。
+
+	八：执行forward或include
+		request还有一个功能就时执行forward和include，也就是代替JSP所提供的forward和include动作指令。前面需要forward时都是通过JSP提供的动作指令进行的，实际上request对象也可以执行forward。
+		HttpServletRequest类提供了一个getRequestDispatcher(String path)方法，其中path就是希望forward或者include的目标路径，该方法返回RequestDispatcher,该对象提供了如下两个方法。
+		（1）forward(ServletRequest request, ServletResponse response)：执行forward。
+		（2）include(ServletRequest request, ServletResponse response)：执行include。
+
+		使用request的getRequestDispatcher(String path)方法时，该path字符串必须以斜线开头。
+
