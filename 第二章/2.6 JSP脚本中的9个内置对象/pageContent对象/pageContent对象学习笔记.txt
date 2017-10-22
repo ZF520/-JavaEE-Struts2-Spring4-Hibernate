@@ -1,0 +1,19 @@
+pageContent对象
+知识点：
+	一：这个对象代表页面上下文，该对象主要用于访问JSP之间的共享数据。使用pageContent可以访问page、request、session、
+	application范围的变量。
+
+	二：pageContent是PageContent类的实例，它提供了如下两个方法来访问page、request、session、application范围的变量。
+		（1）getAttribute(String name):取得page范围内的name属性。
+		（2）getAttribute(String name, int scope):取得指定范围内的name属性，其中scope可以是如下4个值。
+			1）PageContent.PAGE_SCOPE：对应于page范围。
+			2）PageContent.REQUEST_SCOPE：对应于request范围。
+			3）PageContent.SESSION_SCOPE：对应于session范围。
+			4）PageContent.APPLICATION_SCOPE：对应于application范围。
+
+	三：pageContent可用于获取其他内置对象，pageContent对象包含如下方法。
+		（1）ServletRequest getRequest()：获取request对象。
+		（2）ServletResponse getResponse()：获取response对象。
+		（3）ServletConfig getServletConfig()：获取config对象。
+		（4）ServletContent getServletContext()：获取application对象。
+		（5）HttpSession getSession()：获取session对象。
