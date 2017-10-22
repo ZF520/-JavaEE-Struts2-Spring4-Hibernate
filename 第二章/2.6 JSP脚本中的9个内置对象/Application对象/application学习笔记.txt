@@ -1,0 +1,43 @@
+Application对象
+知识点：
+	一、对于大部分浏览器而言，它通常负责完成三件事情。
+	（1）向远程服务器发送请求。
+	（2）读取远程服务器返回的字符串数据。
+	（3）负责根据字符串数据渲染出一个丰富多彩的页面。
+
+	二、Web服务器则负责接收客户端请求，每当接收到客户端连接请求之后，Web服务器应该使用单独的线程为该客户端提供服务：接收请求数据、送回响应数据。
+
+	三、对于每次客户端请求而言，Web服务器大致需要完成如下几个步骤。
+	（1）启动单独的线程。
+	（2）使用I/O流读取用户请求的二进制流数据。
+	（3）从请求数据中解析参数。
+	（4）处理用户请求。
+	（5）生成响应数据。
+	（6）使用IO流向客户端发送请求数据。
+
+	四、JSP、Servlet之间如何交换数据？
+		为了解决这个问题，几乎所有Web服务器（包括Java、ASP、PHP、Ruby等）都会提供4个类似Map的结构，分别是Application、
+		session、request、page，并允许JSP、Servlet将数据放入这4个类似Map的结构中，并允许从这4个Map结构中取出数据。这4个Map结构的区别是范围不同。
+		（1）application：对于整个Web应用有效，一旦JSP、Servlet将数据放入application中，该数据将可以被该应用下其他所有的JSP、Servlet访问。
+		（2）session：仅对一次会话有效，一旦JSP、Servlet将数据放入session中，该数据将可以被本次会话的其他所有的JSP、Servlet访问。
+		（3）request：仅对本次请求有效，一旦JSP、Servlet将数据放入request中，该数据将可以被该次请求的其他JSP、Servlet访问。
+		（4）page：仅对当前页面有效，一旦JSP、Servlet将数据放入page中，该数据只可以被当前页面的JSP脚本、声明部分访问。
+
+	五、application对象通常有如下两个作用。
+	（1）在整个Web应用的多个JSP、Servlet之间共享数据。
+	（2）访问Web应用的配置参数。
+
+	六、让多个JSP、Servlet共享数据
+		application通过setAttribute(String attrName, Object value)方法将一个值设置成application的attName属性，该属性的值对整个Web应用有效，因此该Web应用的每个JSP页面或Servlet都可以访问该属性，访问属性的方法为getAttribute(String attrName)。
+
+		虽然使用application（即ServletContent实例）可以方便多个JSP、Servlet共享数据，但不要仅为了JSP、Servlet共享数据就将数据放入application中！由于application代表整个Web应用，所以通常只应该把Web应用的状态数据放入application里。
+
+	七、获取Web应用配置参数
+		application还有一个重要用处：可用于获取Web应用的配置参数。
+
+		使用application的getInieParameter(String paramName)来获取Web应用的配置参数，这些配置参数应该在Web.xml文件中使用context-param元素配置，每个<content-param../>元素配置一个参数，该元素下有如下两个子元素。
+		（1）param-name:配置Web参数名。
+		（2）param-value:配置Web参数值。
+		web.xml文件中使用<context-param../>元素配置的参数对整个Web应用有效，所以也被称为Web应用的配置参数。
+
+		通过这种方式，可以将一些配置信息放在web.xml文件中配置，避免使用硬编码方式写在代码中，从而更好地提高程序的移植性。
