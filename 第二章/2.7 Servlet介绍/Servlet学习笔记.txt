@@ -1,0 +1,97 @@
+Sevlet介绍
+知识点：
+	一：JSP的本质就是Servlet。
+
+	二：直接使用Servlet的坏处是：Servlet的开发效率非常低，特别是当使用Servlet生成表现层页面时，页面中所有的HTML标签，都需采用Servlet的输出流来输出，因此及其烦琐。而且Servlet是标准的Java类，必须由程序员开发、修改，美工人员难以参与Servlet页面的开发。这一系列的问题，都阻碍了Servlet作为表现层的使用。
+
+	三：Servlet开发
+		Servlet通常被称为服务器段小程序，是运行在服务器端的程序，用于处理及响应客户端的请求。
+		
+		Servlet是个特殊的Java类，这个Java类必须继承HttpServlet。每个Servlet可以响应客户端的请求。Servlet提供不同的方法用于响应客户端请求。
+			1）doGet：用于响应客户端的GET请求。
+			2）doPost：用于响应客户端的POST请求。
+			3）doPut：用于响应客户端的PUT请求。
+			4）doDelete：用于响应客户端的DELETE请求。
+
+		大部分时候，Servlet对于所有请求的响应都是完全一样的。此时，可以采用重写一个方法来代替上面的几个方法：只需重写
+		service()方法即可响应客户端的所有请求。
+
+		HttpServlet还包含两个方法。
+			1）init(ServletConfig config)：创建Servlet实例时，调用该方法的初始化Servlet资源。
+			2）destroy()：销毁Servlet实例时，自动调用该方法的回收资源。
+		需要在初始化Servlet时，完成某些资源初始化的方法，才考虑重写init方法。
+		如果需要在销毁Servlet之前，先完成某些资源的回收，比如关闭数据库连接等，才需要重写destroy方法。
+
+		不用为Servlet类编写构造器，如果需要对Servlet执行初始化操作，应将初始化操作放在Servlet的init()方法中定义。如果重写了init(ServletConfig config)方法，则应在重写该方法的第一行调用super.init(config)。该方法将调用HttpServlet的init方法。
+
+		Servlet于JSP的区别在于：
+			1）Servlet中没有内置对象，原来JSP中的内置对象都必须由程序显示创建。
+			2）对于静态的HTML标签，Servlet都必须使用页面输出流逐行输出。
+
+	四：Servlet的配置
+		为了让Servlet能响应用户请求，还必须将Servlet配置在Web应用中。配置Servlet时，需要修改web.xml文件。
+
+		从Servlet3.0开始，配置Servlet有两种方式。
+			1）在Servlet类中使用@WebServlet注解进行配置。
+			2）通过在web.xml文件中进行配置。
+
+
+		如果打算使用注解来配置Servlet，有两点需要指出。
+			1）不要在web.xml文件的根元素（ <web-app../> ）中指定metadata-complete="true"。
+			2）不要在web.xml文件中配置该Servlet。
+		如果打算使用web.xml文件来配置该Servlet，则需要配置如下两个部分。
+			1）配置Servlet的名字：对应web.xml文件中的<servlet/>元素。
+			2）配置Servlet的URL：对应web.xml文件中的<servlet-mapping/>元素。这一步是可选的。但如果没有为Servlet配置URL，则该Servlet不能响应用户请求。
+
+	五：JSP/Servlet的生命周期
+		创建Servlet实例有两个时机。
+			1）客户端第一次请求某个Servlet时，系统创建该Servlet的实例：大部分的Servlet都是这种Servlet。
+			2）Web应用启动时立即创建Servlet实例，即load-on-startup Servlet。
+		每个Servlet的运行都遵循如下生命周期。
+			1）创建Servlet实例。
+			2）Web容器调用Servlet的init方法，对Servlet进行初始化。
+			3）Servlet初始化后，将一直存在于容器中，用于响应客户端请求。如果客户端发送GET请求，容器调用Servlet的doGet方法处理并响应请求：如果客户端发送POST请求，容器调用Servlet的doPost方法处理并响应请求。或者统一使用service()方法处理来响应用户请求。
+			4）Web容器决定销毁Servlet时，先调用Servlet的destroy方法，通常在关闭Web应用之时销毁Servlet。
+
+	六：load-on-startup Servlet
+		应用启动时就创建Servlet，通常是用于某些后台服务的Servlet，或者需要拦截很多请求的Servlet；这种Servlet通常作为应用的基础Servlet使用，提供重要的后台服务。
+
+		配置load-on-startup的Servlet有两种方式。
+			1）在web.xml文件中通过<servlet../>元素的<load-on-startup../>子元素进行配置。
+			2）通过@WebServlet注解的loadOnStartup属性都只接收一个整形值，这个整形值越小，Servlet就越优先实例化。
+
+	七：访问Servlet的配置参数
+		为Servlet配置参数有两种方式。
+			1）通过@WebServlet的initParams属性来指定。
+			2）通过在web.xml文件的<servlet../>元素中添加<init-param../>子元素来指定。
+
+		访问Servlet配置参数通过ServletConfig对象完成，ServletConfig提供如下方法。
+			1）java.lang.String getInitParameter(java.lang.String name)：用于获取初始化参数。
+
+		JSP的内置对象config就是此处的SeveltConfig。
+
+		每个@WebInitParam可指定如下两个属性。
+			1）name：指定参数名。
+			2）value：指定参数值。
+
+		在web.xml文件中为Servlet配置参数使用<init-param../>元素，该元素可以接受如下两个子元素。
+			1）param-name：指定配置参数名。
+			2）param-value：指定配置参数值。
+
+	八：使用Servlet作为控制器
+		使用Servlet作为表现层有如下三个劣势。
+			1）开发效率低，所有的HTML标签都需要使用页面输出流完成。
+			2）不利于团队协作开发，美工人员无法参与Servlet界面的开发。
+			3）程序可维护性差，即使修改一个按钮的标题，都必须重新编辑Java代码，并重新编译。
+
+		对于遵循MVC模式的JavaEE应用而言，JSP仅作为表现层(View)技术，其作用有两点。
+			1）负责收集用户请求参数。
+			2）将应用的处理结果、状态数据呈现给用户。
+
+		Servlet则仅充当控制器(Controller)角色，它的作用类似于调度员：所有用户请求都发送给Servlet，Servlet调用Model来处理用户请求，并调用JSP来呈现处理结果；或者Servlet直接调用JSP将应用的状态数据呈现给用户。
+		Model通常由JavaBean来充当，所有业务逻辑、数据方法逻辑都在Model中实现。
+
+		MVC中各个角色的对应组件。
+			1）M：Model，即模型，对应JavaBean。
+			2）V：View，即视图，对应JSP页面。
+			3）C：Controller，即控制器，对应Servlet。
