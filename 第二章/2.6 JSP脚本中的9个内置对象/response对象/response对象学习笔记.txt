@@ -1,0 +1,44 @@
+response对象
+知识点：
+	一：response代表服务器对客户端的响应。
+
+	二：使用response来重定向请求，以及用于向客户端增加Cookie。
+
+	三：response响应生成非字符响应
+		对于需要生成非字符响应的情况，就应该使用response来响应客户端请求。
+
+		response是HttpServletResponse接口的实例，该接口提供了一个getOutputStream()方法，该方法返回响应输出字节流。
+
+	四：重定向
+		重定向是response的另外一个用处，与forward不同的是，重定向会丢失所有的请求参数和request范围的属性，因为重定向将生成第二次请求，与前一次请求不在同一个request范围内，所以发送一次请求的请求参数和request范围的属性全部丢失。
+
+		HttpServletResponse提供了一个sendRedirect(String path)方法，该方法用于重定向到path资源，即重定向path资源发送请求。
+
+		重定向会丢失所有的请求参数，使用重定向的效果，与在地址栏里重新输入新地址再按回车键的效果完全一样，即发送了第二次请求。
+
+		forward和redirect对比
+		转发（forward）
+			1）执行forward后依然是上一次请求。
+			2）forward的目标页面可以访问原请求参数，因此依然是同一次请求，所有原请求的请求参数、request范围的属性全部存在。
+			3）地址栏里请求的URL不会改变。
+		重定向(redirect)
+			1)执行redirect后生成第二次请求。
+			2）redirect的目标页面不能访问原请求的请求参数，因为是第二次请求了，所以原请求的请求参数、request范围的属性全部丢失。
+			3）地址栏改为重定向的目标URL。相当于再浏览器地址栏里输入新的URL后按回车键。
+
+	五：增加Cookie
+		Cookie通常用于网络记录客户的某些信息，比如客户的用户名及客户的喜好等。一旦用户下次登录，网站可以获取到客户的相关信息，根据这些客户信息，网络可以对客户提供更友好的服务。Cookie与session的不同之处在于：session会随浏览器的关闭而失效，但Cookie会一直存放在客户端机器上，除非超出Cookie的生命期限。
+
+		增加Cookie也是使用response内置对象完成的，response对象提供了如下方法。
+			void addCookie(Cookie cookie)：增加Cookie。
+
+		增加Cookie请按如下步骤进行。
+			1）创建Cookie实例，Cookie的构造器为Cookie(String name, String value)。
+			2）设置Cookie的生命期限，即该Cookie在多长时间内有效。
+			3）向客户端写Cookie。
+
+		访问客户端Cookie使用request对象，request对象提供了getCookie()方法，该方法将返回客户端机器上所有Cookie组成的数组，遍历该数组的每个元素，找到希望访问的Cookie即可。
+
+		使用Cookie对象必须设置其生存期限，否则Cookie将会随浏览器的关闭而自动消失。
+
+		默认情况下，Cookie值不允许出现中文字符，如果需要值为中文内容的Cookie怎么办呢？同样可以借助于java.net.URLEncoder先对中文字符串进行编码，将编码后的结果设为Cookie值。当程序要读取Cookie时，则应该先读取，然后使用java.net.URLDecoder对其进行解码。
