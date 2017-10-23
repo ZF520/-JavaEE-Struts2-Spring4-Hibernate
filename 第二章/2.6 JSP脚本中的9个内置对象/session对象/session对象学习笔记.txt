@@ -1,0 +1,13 @@
+session对象
+知识点：
+	一：session对象也是一个非常常用的对象，这个对象代表一次用户会话。一次用户会话的含义是：从客户端浏览器连接服务器开始，到客户端浏览器与服务器断开为止，这个过程就是一次会话。
+
+	二：session范围内的属性可以在多个页面的跳转之间共享。一旦关闭浏览器，即session结束，session范围内的属性将会全部丢失。
+
+	三：session对象是HttpSession的实例，HttpSession有如下两个常用的方法。
+		1）setAttribute(String attName, Object attValue)：设置session范围内attName属性的值为attValue。
+		2）getAttribute(String attName)：返回session范围内attName属性的值。
+
+	四：session机制通常用于保存客户端的状态信息，这些状态信息需要保存到Web服务器的硬盘上，所以要求session里的属性值必须是可序列化的，否则将会引发不可序列化的异常。
+
+	五：session的属性值可以是任何可序列化的Java对象。
